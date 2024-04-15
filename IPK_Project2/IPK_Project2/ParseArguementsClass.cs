@@ -1,4 +1,5 @@
-﻿using SharpPcap;
+﻿using System.Net.NetworkInformation;
+using SharpPcap;
 
 namespace IPK_Project2;
 
@@ -19,23 +20,18 @@ public class ParseArguementsClass(string interfaceName, ushort portSource, ushor
     {
         if (interfaceName == string.Empty)
         {
-            devices.ToList().ForEach(Console.WriteLine);
+            foreach (ILiveDevice item in devices)
+            {
+                Console.WriteLine("Name: " + item.Name + "\nDescription: " + item.Description + "\n");
+            }
             return null;
         }
-        
-        foreach (ILiveDevice item in devices)
-        {
-            if (item.Description == interfaceName)
-            {
-                return item;
-            }
-        }
 
-        return null;
+        return devices.FirstOrDefault(o => o.Name == interfaceName);
     }
     
-    public void ParseConnectionType()
+    public void ParseConnectionType(ushort port, bool tcp, bool udp)
     {
-       
+        
     }
 }

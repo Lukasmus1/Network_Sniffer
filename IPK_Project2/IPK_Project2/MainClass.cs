@@ -47,6 +47,6 @@ class MainClass
         
         //Start sniffing
         Sniffer sniffer = new(interfaceName, portSource, portDest, tcp, udp, arp, icmp4, icmp6, igmp, mld, repeat);
-        sniffer.Sniff();
+        sniffer.SniffingSetup();
     }
 }
