@@ -13,11 +13,24 @@ public class OutputFormatter
                "\nsrc MAC: " + FormatMac(((EthernetPacket)packet).SourceHardwareAddress.ToString()) +
                "\ndst MAC: " + FormatMac(((EthernetPacket)packet).DestinationHardwareAddress.ToString()) +
                "\nframe length: " + rawCapture.GetPacket().Data.Length +
-               "\nsrc IP: " + packet.Extract<IPPacket>().SourceAddress;
-        /*"\ndst IP: " + packet.Extract<IPPacket>().DestinationAddress +
-        "\nsrc port: " + ParsePort(packet, true) +
-        "\ndst port: " + ParsePort(packet, false) +
-        "\n" + FormatHexDump(rawCapture.GetPacket().Data);*/
+               "\nsrc IP: " + ParseIpAddress(packet, true) +
+               "\ndst IP: " + ParseIpAddress(packet, false) +
+               "\nsrc port: " + ParsePort(packet, true) +
+               "\ndst port: " + ParsePort(packet, false) +
+               "\n" + FormatHexDump(rawCapture.GetPacket().Data);
+    }
+
+    private static string ParseIpAddress(Packet packet, bool src)
+    {
+        ArpPacket? arp = packet.Extract<ArpPacket>();
+        if (arp == null)
+        {
+            return src ? packet.Extract<IPPacket>().SourceAddress.ToString() : packet.Extract<IPPacket>().DestinationAddress.ToString();
+        }
+        else
+        {
+            return src ? arp.SenderProtocolAddress.ToString() : arp.TargetProtocolAddress.ToString();
+        }
     }
     
     private static string ParsePort(Packet packet, bool src)
