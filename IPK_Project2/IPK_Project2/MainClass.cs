@@ -10,7 +10,7 @@ class MainClass
         string interfaceName = string.Empty;
         ushort portSource = 0;
         ushort portDest = 0;
-        bool tcp = false, udp = false, arp = false, icmp4 = false, icmp6 = false, igmp = false, mld = false;
+        bool tcp = false, udp = false, arp = false, icmp4 = false, icmp6 = false, igmp = false, mld = false, ndp = false;
         int repeat = 1;
 
         //Arg parser
@@ -24,6 +24,7 @@ class MainClass
                 arp = o.Arp;
                 icmp4 = o.Icmp4;
                 icmp6 = o.Icmp6;
+                ndp = o.Ndp;
                 igmp = o.Igmp;
                 mld = o.Mld;
                 repeat = o.Repeat;
@@ -46,7 +47,7 @@ class MainClass
             });
         
         //Start sniffing
-        Sniffer sniffer = new(interfaceName, portSource, portDest, tcp, udp, arp, icmp4, icmp6, igmp, mld, repeat);
+        Sniffer sniffer = new(interfaceName, portSource, portDest, tcp, udp, arp, icmp4, icmp6, ndp, igmp, mld, repeat);
         sniffer.SniffingSetup();
     }
 }

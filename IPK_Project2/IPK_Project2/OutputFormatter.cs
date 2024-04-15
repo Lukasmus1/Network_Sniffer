@@ -51,9 +51,46 @@ public class OutputFormatter
         return rawMac;
     }
     
-    public static string FormatHexDump(byte[] bytes)
+    private static string FormatHexDump(byte[] bytes)
     {
-        
+        StringBuilder result = new();
+        for (int i = 0; i < bytes.Length; i += 16)
+        {
+            //Byte offset
+            result.Append($"{i:x4}: ");
+
+            //Print bytes in this line
+            for (int j = 0; j < 16; j++)
+            {
+                if (i + j < bytes.Length)
+                {
+                    result.Append($"{bytes[i + j]:x2} ");
+                }
+                else
+                {
+                    result.Append("   "); 
+                }
+            }
+
+            //Print ASCII chars
+            for (int j = 0; j < 16 && i + j < bytes.Length; j++)
+            {
+                //Non printable char as .
+                if (bytes[i + j] < 32 || bytes[i + j] > 127) 
+                {
+                    result.Append('.');
+                }
+                else
+                {
+                    result.Append((char)bytes[i + j]);
+                }
+            }
+
+            //Next line
+            result.AppendLine();
+        }
+
+        return result.ToString();
     }
     
 }

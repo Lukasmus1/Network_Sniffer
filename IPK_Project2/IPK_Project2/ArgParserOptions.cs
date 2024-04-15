@@ -31,6 +31,9 @@ public class ArgParserOptions
     [Option("icmp6")]
     public bool Icmp6 { get; set; } 
     
+    [Option("ndp")]
+    public bool Ndp { get; set; }
+    
     [Option("igmp")]
     public bool Igmp { get; set; }
     
