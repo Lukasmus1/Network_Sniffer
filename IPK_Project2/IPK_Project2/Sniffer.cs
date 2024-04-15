@@ -69,6 +69,10 @@ public class Sniffer
     private void OnPacketArrival(object sender, PacketCapture e)
     {
         Packet? packet = Packet.ParsePacket(e.GetPacket().LinkLayerType, e.GetPacket().Data);
+        /*if (packet.HasPayloadPacket)
+        {
+            Console.WriteLine("lol");
+        }*/
 
         if (FilterPacket(packet))
         {
@@ -79,7 +83,7 @@ public class Sniffer
 
     private bool FilterPacket(Packet packet)
     {
-        if (_repeatCounter != _repeat)
+        if (_repeatCounter < _repeat)
         {
             if (_tcp)
             {

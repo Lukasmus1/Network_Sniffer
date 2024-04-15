@@ -13,11 +13,11 @@ public class OutputFormatter
                "\nsrc MAC: " + FormatMac(((EthernetPacket)packet).SourceHardwareAddress.ToString()) +
                "\ndst MAC: " + FormatMac(((EthernetPacket)packet).DestinationHardwareAddress.ToString()) +
                "\nframe length: " + rawCapture.GetPacket().Data.Length +
-               "\nsrc IP: " + packet.Extract<IPPacket>().SourceAddress +
-               "\ndst IP: " + packet.Extract<IPPacket>().DestinationAddress +
-               "\nsrc port: " + ParsePort(packet, true) +
-               "\ndst port: " + ParsePort(packet, false) +
-               "\n" + FormatHexDump(rawCapture.GetPacket().Data);
+               "\nsrc IP: " + packet.Extract<IPPacket>().SourceAddress;
+        /*"\ndst IP: " + packet.Extract<IPPacket>().DestinationAddress +
+        "\nsrc port: " + ParsePort(packet, true) +
+        "\ndst port: " + ParsePort(packet, false) +
+        "\n" + FormatHexDump(rawCapture.GetPacket().Data);*/
     }
     
     private static string ParsePort(Packet packet, bool src)
@@ -32,7 +32,7 @@ public class OutputFormatter
         }
         else
         {
-            return "err";
+            return "NaN";
         }
     }
     
