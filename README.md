@@ -8,7 +8,7 @@
     - [Začátek programu](#impl2)
     - [Funkcionalita](#impl3)
         - [OnPacketArrival](#impl3-1)
-        - [OnPacketArrival](#impl3-2)
+        - [Formátování výstupu](#impl3-2)
 - [Testování](#test)
 - [Makefile](#make)
 - [Závěr](#end)
