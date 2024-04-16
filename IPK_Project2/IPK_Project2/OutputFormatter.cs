@@ -39,14 +39,12 @@ public class OutputFormatter
         {
             return src ? packet.Extract<TcpPacket>().SourcePort.ToString() : packet.Extract<TcpPacket>().DestinationPort.ToString();
         }
-        else if (packet.Extract<UdpPacket>() != null)
+        if (packet.Extract<UdpPacket>() != null)
         {
             return src ? packet.Extract<UdpPacket>().SourcePort.ToString() : packet.Extract<UdpPacket>().DestinationPort.ToString();
         }
-        else
-        {
-            return "NaN";
-        }
+        
+        return "NaN";
     }
     
     private static string ConvertToRfc3339(PosixTimeval timeval)

@@ -31,36 +31,34 @@ public class Sniffer
         _repeat = repeat;
     }
 
-    public int SniffingSetup()
+    public void SniffingSetup()
     {
-        ParseArguementsClass parser = new(_interfaceName, _portSource, _portDest, _tcp, _udp, _arp, _icmp4, _icmp6,
-            _igmp, _mld, _repeat);
+        ParseInterfaceClass parser = new(_interfaceName);
         CaptureDeviceList? devices = CaptureDeviceList.Instance;
 
         ILiveDevice? device = parser.ParseInterface(devices);
         if (device == null)
         {
-            Console.WriteLine("The specified interface does not exist");
+            return;
         }
         
-        StartSniffing(device!);
+        StartSniffing(device);
         while (_run)
         {
             //Sleep to save CPU resources
-            Thread.Sleep(100);
+            Thread.Sleep(50);
         }
-        StopSniffing(device!);
-        return 0;
+        StopSniffing(device);
     }
 
-    private void StartSniffing(ILiveDevice device)
+    private void StartSniffing(ICaptureDevice device)
     {
         device.Open(DeviceModes.Promiscuous);
         device.OnPacketArrival += OnPacketArrival;
         device.StartCapture();
     }
     
-    private void StopSniffing(ILiveDevice device)
+    private void StopSniffing(ICaptureDevice device)
     {
         device.StopCapture();
         device.Close();
@@ -69,10 +67,6 @@ public class Sniffer
     private void OnPacketArrival(object sender, PacketCapture e)
     {
         Packet? packet = Packet.ParsePacket(e.GetPacket().LinkLayerType, e.GetPacket().Data);
-        /*if (packet.HasPayloadPacket)
-        {
-            Console.WriteLine("lol");
-        }*/
 
         if (FilterPacket(packet))
         {
@@ -83,37 +77,35 @@ public class Sniffer
 
     private bool FilterPacket(Packet packet)
     {
-        if (_repeatCounter < _repeat)
-        {
-            if (_tcp)
-            {
-                if (packet.Extract<TcpPacket>() == null)
-                {
-                    return false;
-                }
-                
-                if ((_portSource != 0 && packet.Extract<TcpPacket>().SourcePort != _portSource) || (_portDest != 0 && packet.Extract<TcpPacket>().DestinationPort != _portDest))
-                {
-                    return false;
-                }
-            }
-            else if (_udp)
-            {
-                if (packet.Extract<UdpPacket>() == null)
-                {
-                    return false;
-                }
-                
-                if ((_portSource != 0 && packet.Extract<UdpPacket>().SourcePort != _portSource) || (_portDest != 0 && packet.Extract<UdpPacket>().DestinationPort != _portDest))
-                {
-                    return false;
-                }
-            }
-        }
-        else
+        if (_repeatCounter >= _repeat)
         {
             _run = false;
             return false;
+        }
+        
+        if (_tcp)
+        {
+            if (packet.Extract<TcpPacket>() == null)
+            {
+                return false;
+            }
+                
+            if ((_portSource != 0 && packet.Extract<TcpPacket>().SourcePort != _portSource) || (_portDest != 0 && packet.Extract<TcpPacket>().DestinationPort != _portDest))
+            {
+                return false;
+            }
+        }
+        else if (_udp)
+        {
+            if (packet.Extract<UdpPacket>() == null)
+            {
+                return false;
+            }
+                
+            if ((_portSource != 0 && packet.Extract<UdpPacket>().SourcePort != _portSource) || (_portDest != 0 && packet.Extract<UdpPacket>().DestinationPort != _portDest))
+            {
+                return false;
+            }
         }
         
         if (_icmp4 && packet.Extract<IcmpV4Packet>() == null)
@@ -140,9 +132,21 @@ public class Sniffer
         {
             return false;
         }
-        
-        //MLD
-        
+
+        if (packet.Extract<ArpPacket>() == null)
+        {
+            if (_mld && packet.Extract<IPPacket>().DestinationAddress.IsIPv6Multicast)
+            {
+                return false;
+            }
+        }
+
         return true;
+    }
+    
+    public void EndProgram(object? sender, ConsoleCancelEventArgs e)
+    {
+        e.Cancel = true;
+        _run = false;
     }
 }

@@ -46,8 +46,14 @@ class MainClass
                 }
             });
         
+        
+        
         //Start sniffing
         Sniffer sniffer = new(interfaceName, portSource, portDest, tcp, udp, arp, icmp4, icmp6, ndp, igmp, mld, repeat);
+        
+        //CTRL+C handler
+        Console.CancelKeyPress += sniffer.EndProgram;
+        
         sniffer.SniffingSetup();
     }
 }
