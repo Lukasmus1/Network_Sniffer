@@ -6,7 +6,7 @@ build:
 	dotnet build
 
 publish:
-	dotnet publish -o ./ -p:PublishSingleFile=true --self-contained true
+	dotnet publish -o . -p:PublishSingleFile=true --self-contained true
 
 run:
 	dotnet run --project IPK_Project2.csproj -- $(ARGS)
@@ -14,7 +14,6 @@ run:
 clean:
 	dotnet clean
 	rm -rf ./bin ./obj
-	rm -f ./ipk24chat-client
-	rm -f ./ipk24chat-client.pdb
+	rm -f ./ipk-sniffer
     
 .PHONY: all build run clean
