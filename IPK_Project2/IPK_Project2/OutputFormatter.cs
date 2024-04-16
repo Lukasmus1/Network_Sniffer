@@ -8,10 +8,11 @@ public class OutputFormatter
 {
     public static string FormatOutput(PacketCapture rawCapture)
     {
+        
         Packet packet = Packet.ParsePacket(rawCapture.GetPacket().LinkLayerType, rawCapture.GetPacket().Data);
         return "timestamp: " + ConvertToRfc3339(rawCapture.GetPacket().Timeval) +
-               "\nsrc MAC: " + FormatMac(((EthernetPacket)packet).SourceHardwareAddress.ToString()) +
-               "\ndst MAC: " + FormatMac(((EthernetPacket)packet).DestinationHardwareAddress.ToString()) +
+               "\nsrc MAC: " + FormatMac(packet, true) +
+               "\ndst MAC: " + FormatMac(packet, false) +
                "\nframe length: " + rawCapture.GetPacket().Data.Length +
                "\nsrc IP: " + ParseIpAddress(packet, true) +
                "\ndst IP: " + ParseIpAddress(packet, false) +
@@ -53,8 +54,24 @@ public class OutputFormatter
         return time.ToString("yyyy-MM-dd'T'HH:mm:sszzz");
     }
 
-    private static string FormatMac(string rawMac)
+    private static string FormatMac(Packet packet, bool src)
     {
+        EthernetPacket? ethernetPacket = packet.Extract<EthernetPacket>();
+        if (ethernetPacket == null)
+        {
+            return "NaN";
+        }
+
+        string rawMac;
+        if (src)
+        {
+            rawMac = ethernetPacket.SourceHardwareAddress.ToString();
+        }
+        else
+        {
+            rawMac = ethernetPacket.DestinationHardwareAddress.ToString();
+        }
+
         for (int i = 2; i < rawMac.Length; i += 3)
         {
             rawMac = rawMac.Insert(i, ":");
