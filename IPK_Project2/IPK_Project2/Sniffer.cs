@@ -91,7 +91,7 @@ public class Sniffer
                 return false;
             }
 
-            if ((_portSource != 0 && packet.Extract<TcpPacket>().SourcePort != _portSource) ||
+            if ((_portSource != 0 && packet.Extract<TcpPacket>().SourcePort != _portSource) &&
                 (_portDest != 0 && packet.Extract<TcpPacket>().DestinationPort != _portDest))
             {
                 return false;
@@ -104,7 +104,7 @@ public class Sniffer
                 return false;
             }
 
-            if ((_portSource != 0 && packet.Extract<UdpPacket>().SourcePort != _portSource) ||
+            if ((_portSource != 0 && packet.Extract<UdpPacket>().SourcePort != _portSource) &&
                 (_portDest != 0 && packet.Extract<UdpPacket>().DestinationPort != _portDest))
             {
                 return false;
