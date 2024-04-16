@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using PacketDotNet;
+﻿using PacketDotNet;
 using SharpPcap;
 
 namespace IPK_Project2;
@@ -36,6 +35,7 @@ public class Sniffer
         ParseInterfaceClass parser = new(_interfaceName);
         CaptureDeviceList? devices = CaptureDeviceList.Instance;
 
+        //Parsing of interface argument
         ILiveDevice? device = parser.ParseInterface(devices);
         if (device == null)
         {
@@ -43,6 +43,8 @@ public class Sniffer
         }
 
         StartSniffing(device);
+        
+        //Loop to prevent program from ending prematurely
         while (_run)
         {
             //Sleep to save CPU resources
@@ -69,11 +71,13 @@ public class Sniffer
     {
         Packet? packet = Packet.ParsePacket(e.GetPacket().LinkLayerType, e.GetPacket().Data);
 
-        if (FilterPacket(packet))
+        //Filtering packets
+        if (!FilterPacket(packet))
         {
-            Console.WriteLine(OutputFormatter.FormatOutput(e));
-            _repeatCounter++;
+            return;
         }
+        Console.WriteLine(OutputFormatter.FormatOutput(e));
+        _repeatCounter++;
     }
 
     private bool FilterPacket(Packet packet)
@@ -91,6 +95,8 @@ public class Sniffer
                 return false;
             }
 
+            //Port parsing
+            //Port 0 is a wildcard for any port
             if ((_portSource != 0 && packet.Extract<TcpPacket>().SourcePort != _portSource) &&
                 (_portDest != 0 && packet.Extract<TcpPacket>().DestinationPort != _portDest))
             {
@@ -104,38 +110,46 @@ public class Sniffer
                 return false;
             }
 
+            //Port parsing
+            //Port 0 is a wildcard for any port
             if ((_portSource != 0 && packet.Extract<UdpPacket>().SourcePort != _portSource) &&
                 (_portDest != 0 && packet.Extract<UdpPacket>().DestinationPort != _portDest))
             {
                 return false;
             }
         }
-
+        
+        //ICMP4 filter
         if (_icmp4 && packet.Extract<IcmpV4Packet>() == null)
         {
             return false;
         }
 
+        //ICMP6 filter
         if (_icmp6 && packet.Extract<IcmpV6Packet>() == null)
         {
             return false;
         }
 
+        //ARP filter
         if (_arp && packet.Extract<ArpPacket>() == null)
         {
             return false;
         }
 
+        //NDP filter
         if (_ndp && packet.Extract<NdpPacket>() == null)
         {
             return false;
         }
 
+        //IGMP filter
         if (_igmp && packet.Extract<IgmpV2Packet>() == null)
         {
             return false;
         }
 
+        //MLD filter
         if (packet.Extract<ArpPacket>() == null)
         {
             if (_mld && packet.Extract<IPPacket>().DestinationAddress.IsIPv6Multicast)

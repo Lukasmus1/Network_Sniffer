@@ -8,8 +8,10 @@ public class OutputFormatter
 {
     public static string FormatOutput(PacketCapture rawCapture)
     {
-        
+        //Getting packet from rawCapture
         Packet packet = Packet.ParsePacket(rawCapture.GetPacket().LinkLayerType, rawCapture.GetPacket().Data);
+        
+        //Formatting output
         return "timestamp: " + ConvertToRfc3339(rawCapture.GetPacket().Timeval) +
                "\nsrc MAC: " + FormatMac(packet, true) +
                "\ndst MAC: " + FormatMac(packet, false) +
@@ -20,28 +22,34 @@ public class OutputFormatter
                "\ndst port: " + ParsePort(packet, false) +
                "\n" + FormatHexDump(rawCapture.GetPacket().Data);
     }
-
+    
     private static string ParseIpAddress(Packet packet, bool src)
     {
+        //Check if packet is ARP, because ARP doesn't have IP layer
         ArpPacket? arp = packet.Extract<ArpPacket>();
         if (arp == null)
         {
+            //Check if this should return source or destination IP
             return src ? packet.Extract<IPPacket>().SourceAddress.ToString() : packet.Extract<IPPacket>().DestinationAddress.ToString();
         }
         else
         {
+            //Check if this should return source or destination IP
             return src ? arp.SenderProtocolAddress.ToString() : arp.TargetProtocolAddress.ToString();
         }
     }
     
     private static string ParsePort(Packet packet, bool src)
     {
+        //Check if packet is TCP or UDP and return source or destination port
         if (packet.Extract<TcpPacket>() != null)
         {
+            //Check if this should return source or destination IP
             return src ? packet.Extract<TcpPacket>().SourcePort.ToString() : packet.Extract<TcpPacket>().DestinationPort.ToString();
         }
         if (packet.Extract<UdpPacket>() != null)
         {
+            //Check if this should return source or destination IP
             return src ? packet.Extract<UdpPacket>().SourcePort.ToString() : packet.Extract<UdpPacket>().DestinationPort.ToString();
         }
         
@@ -50,12 +58,16 @@ public class OutputFormatter
     
     private static string ConvertToRfc3339(PosixTimeval timeval)
     {
+        //Convert PosixTimeval to DateTimeOffset
         DateTimeOffset time = DateTimeOffset.FromUnixTimeSeconds((long)timeval.Seconds);      
+        
+        //Return formatted string in RFC3339
         return time.ToString("yyyy-MM-dd'T'HH:mm:sszzz");
     }
 
     private static string FormatMac(Packet packet, bool src)
     {
+        //Loopback packet doesn't have Ethernet layer nor MAC address
         EthernetPacket? ethernetPacket = packet.Extract<EthernetPacket>();
         if (ethernetPacket == null)
         {
@@ -63,6 +75,8 @@ public class OutputFormatter
         }
 
         string rawMac;
+        
+        //Check if this should return source or destination MAC
         if (src)
         {
             rawMac = ethernetPacket.SourceHardwareAddress.ToString();
@@ -72,6 +86,7 @@ public class OutputFormatter
             rawMac = ethernetPacket.DestinationHardwareAddress.ToString();
         }
 
+        //Format MAC address
         for (int i = 2; i < rawMac.Length; i += 3)
         {
             rawMac = rawMac.Insert(i, ":");
