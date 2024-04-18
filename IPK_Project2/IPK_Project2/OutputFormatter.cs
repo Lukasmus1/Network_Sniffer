@@ -58,11 +58,15 @@ public class OutputFormatter
     
     private static string ConvertToRfc3339(PosixTimeval timeval)
     {
-        //Convert PosixTimeval to DateTimeOffset
-        DateTimeOffset time = DateTimeOffset.FromUnixTimeSeconds((long)timeval.Seconds);      
-        
-        //Return formatted string in RFC3339
-        return time.ToString("yyyy-MM-dd'T'HH:mm:sszzz");
+        // Convert PosixTimeval to DateTimeOffset
+        DateTimeOffset time = DateTimeOffset.FromUnixTimeSeconds((long)timeval.Seconds);
+
+        // Convert to desired timezone
+        TimeZoneInfo cetZone = TimeZoneInfo.Local;
+        DateTimeOffset cetTime = TimeZoneInfo.ConvertTime(time, cetZone);
+
+        // Return formatted string in RFC3339
+        return cetTime.ToString("yyyy-MM-dd'T'HH:mm:sszzz");
     }
 
     private static string FormatMac(Packet packet, bool src)
