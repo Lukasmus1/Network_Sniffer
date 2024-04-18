@@ -152,24 +152,26 @@ public class Sniffer
         //MLD filter
         if (packet.Extract<ArpPacket>() == null)
         {
-            if (_mld && packet.Extract<IPPacket>() == null)
+            if (_mld)
             {
-                return false;
-            }
+                if (packet.Extract<IPPacket>() == null)
+                {
+                    return false;
+                }
+                IcmpV6Packet? packetV6 = packet.Extract<IcmpV6Packet>();
+                if (packetV6 == null)
+                {
+                    return false;
+                }
 
-            IcmpV6Packet? packetV6 = packet.Extract<IcmpV6Packet>();
-            if (packetV6 == null)
-            {
-                return false;
-            }
-
-            switch ((int)packetV6.Type)
-            {
-                case 130:
-                case 131:
-                case 132:
-                case 143:
-                    return true;
+                switch ((int)packetV6.Type)
+                {
+                    case 130:
+                    case 131:
+                    case 132:
+                    case 143:
+                        return true;
+                }
             }
         }
 
