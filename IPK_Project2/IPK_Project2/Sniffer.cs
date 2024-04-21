@@ -96,7 +96,7 @@ public class Sniffer
             {
                 //Port parsing
                 //Port 0 is a wildcard for any port
-                if (!(_portSource == 0 && tcpPacket.SourcePort != _portSource && _portDest != 0 && tcpPacket.DestinationPort != _portDest))
+                if (!(_portSource != 0 && tcpPacket.SourcePort != _portSource && _portDest != 0 && tcpPacket.DestinationPort != _portDest))
                 {
                     return true;
                 }
@@ -108,7 +108,7 @@ public class Sniffer
             {
                 //Port parsing
                 //Port 0 is a wildcard for any port
-                if (!(_portSource == 0 && udpPacket.SourcePort != _portSource && _portDest != 0 && udpPacket.DestinationPort != _portDest))
+                if (!(_portSource != 0 && udpPacket.SourcePort != _portSource && _portDest != 0 && udpPacket.DestinationPort != _portDest))
                 {
                     return true;
                 }
