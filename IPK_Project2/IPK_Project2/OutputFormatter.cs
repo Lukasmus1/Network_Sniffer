@@ -53,7 +53,7 @@ public class OutputFormatter
             return src ? packet.Extract<UdpPacket>().SourcePort.ToString() : packet.Extract<UdpPacket>().DestinationPort.ToString();
         }
         
-        return "NaN";
+        return "None";
     }
     
     private static string ConvertToRfc3339(PosixTimeval timeval)
@@ -76,7 +76,7 @@ public class OutputFormatter
         EthernetPacket? ethernetPacket = packet.Extract<EthernetPacket>();
         if (ethernetPacket == null)
         {
-            return "NaN";
+            return "None";
         }
 
         string rawMac;
