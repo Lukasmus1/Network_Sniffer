@@ -116,15 +116,29 @@ public class OutputFormatter
                 }
                 else
                 {
-                    result.Append("   "); 
+                    result.Append("   ");
+                }
+
+                // Insert additional space in the middle (wireshark style) 
+                if (j == 7)
+                {
+                    result.Append(' ');
                 }
             }
+
+            result.Append(' ');
 
             //Print ASCII chars
             for (int j = 0; j < 16 && i + j < bytes.Length; j++)
             {
+                // Insert additional space in the middle (wiresahrk style)
+                if (j == 8)
+                {
+                    result.Append(' ');
+                }
+
                 //Non printable char as .
-                if (bytes[i + j] < 32 || bytes[i + j] > 127) 
+                if (bytes[i + j] < 32 || bytes[i + j] > 126)
                 {
                     result.Append('.');
                 }
