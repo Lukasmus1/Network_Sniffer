@@ -176,6 +176,17 @@ public class Sniffer
                 }
             }
         }
+
+        if (tcpPacket == null && udpPacket == null && arpPacket == null && icmpv4Packet == null &&
+             icmpv6Packet == null && igmpPacket == null && packetV6 == null && ndpPacket == null)
+        {
+            return false;
+        }
+        
+        if (!_tcp && !_udp && !_arp && !_icmp4 && !_icmp6 && !_igmp && !_mld && !_ndp)
+        {
+            return true;
+        }
         
         return false;
     }
