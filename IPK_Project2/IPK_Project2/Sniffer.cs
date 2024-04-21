@@ -126,7 +126,7 @@ public class Sniffer
         IcmpV6Packet? icmpv6Packet = packet.Extract<IcmpV6Packet>();
         if (_icmp6)
         {
-            if (icmpv6Packet != null || !(icmpv6Packet!.Type != IcmpV6Type.EchoRequest && icmpv6Packet.Type != IcmpV6Type.EchoReply))
+            if (icmpv6Packet != null && !(icmpv6Packet.Type != IcmpV6Type.EchoRequest && icmpv6Packet.Type != IcmpV6Type.EchoReply))
             {
                 return true;
             }
