@@ -48,7 +48,7 @@ public class Sniffer
         while (_run)
         {
             //Sleep to save CPU resources
-            Thread.Sleep(50);
+            Thread.Sleep(1);
         }
 
         StopSniffing(device);
@@ -88,47 +88,48 @@ public class Sniffer
             return false;
         }
 
+        TcpPacket? tcpPacket = packet.Extract<TcpPacket>();
+        UdpPacket? udpPacket = packet.Extract<UdpPacket>();
         if (_tcp)
         {
-            if (packet.Extract<TcpPacket>() == null)
+            if (tcpPacket == null)
             {
                 return false;
             }
 
             //Port parsing
             //Port 0 is a wildcard for any port
-            if ((_portSource != 0 && packet.Extract<TcpPacket>().SourcePort != _portSource) &&
-                (_portDest != 0 && packet.Extract<TcpPacket>().DestinationPort != _portDest))
+            if (_portSource != 0 && tcpPacket.SourcePort != _portSource && _portDest != 0 && tcpPacket.DestinationPort != _portDest)
             {
                 return false;
             }
         }
         else if (_udp)
         {
-            if (packet.Extract<UdpPacket>() == null)
+            if (udpPacket == null)
             {
                 return false;
             }
 
             //Port parsing
             //Port 0 is a wildcard for any port
-            if ((_portSource != 0 && packet.Extract<UdpPacket>().SourcePort != _portSource) &&
-                (_portDest != 0 && packet.Extract<UdpPacket>().DestinationPort != _portDest))
+            if (_portSource != 0 && udpPacket.SourcePort != _portSource && _portDest != 0 && udpPacket.DestinationPort != _portDest)
             {
                 return false;
             }
         }
         
         //ICMP4 filter
-        if (_icmp4 && packet.Extract<IcmpV4Packet>() == null)
+        IcmpV4Packet? icmpv4Packet = packet.Extract<IcmpV4Packet>();
+        if (_icmp4 && icmpv4Packet == null)
         {
             return false;
         }
 
         //ICMP6 filter
+        IcmpV6Packet? icmpv6Packet = packet.Extract<IcmpV6Packet>();
         if (_icmp6)
         {
-            IcmpV6Packet? icmpv6Packet = packet.Extract<IcmpV6Packet>();
             if (icmpv6Packet == null || (icmpv6Packet.Type != IcmpV6Type.EchoRequest && icmpv6Packet.Type != IcmpV6Type.EchoReply))
             {
                 return false;
@@ -136,25 +137,29 @@ public class Sniffer
         }
 
         //ARP filter
-        if (_arp && packet.Extract<ArpPacket>() == null)
+        ArpPacket? arpPacket = packet.Extract<ArpPacket>();
+        if (_arp && arpPacket == null)
         {
             return false;
         }
 
         //NDP filter
-        if (_ndp && packet.Extract<NdpPacket>() == null)
+        NdpPacket? ndpPacket = packet.Extract<NdpPacket>();
+        if (_ndp && ndpPacket == null)
         {
             return false;
         }
 
         //IGMP filter
-        if (_igmp && packet.Extract<IgmpV2Packet>() == null)
+        IgmpV2Packet? igmpPacket = packet.Extract<IgmpV2Packet>();
+        if (_igmp && igmpPacket == null)
         {
             return false;
         }
 
         //MLD filter
-        if (packet.Extract<ArpPacket>() == null)
+        IcmpV6Packet? packetV6 = null;
+        if (arpPacket == null)
         {
             if (_mld)
             {
@@ -162,7 +167,7 @@ public class Sniffer
                 {
                     return false;
                 }
-                IcmpV6Packet? packetV6 = packet.Extract<IcmpV6Packet>();
+                packetV6 = packet.Extract<IcmpV6Packet>();
                 if (packetV6 == null)
                 {
                     return false;
@@ -177,6 +182,11 @@ public class Sniffer
                         return true;
                 }
             }
+        }
+
+        if (tcpPacket == null && udpPacket == null && icmpv4Packet == null && icmpv6Packet == null && arpPacket == null && ndpPacket == null && igmpPacket == null && packetV6 == null)
+        {
+            return false;
         }
 
         return true;

@@ -45,6 +45,8 @@ Filtrovat je možné následující packety:
 - MLD
 - Filtrace podle čísla portu
 
+Pokud packet není ani jeden typ z výše uvedených (například lldp), přeskočí se.
+
 #### Formátování výstupu <a name="impl3-2"></a>
 Po správném vyfiltrování se informace o daném packet pošlou do statické metody `FormatOutput()` ve vlastní třídě `OutputFormatter`. V této třídě jsou mimo již dřívě zmíněnou metodu také pomocné metody, které zjistí různé informace o daném packetu. Například čas, MAC adresu, IP adresu...
 Všechny tyto metody nakonec pomůžou vrátit výsledný `string` naformátovaný podle zadání a inkrementuje se počet vypsaných packetů.
