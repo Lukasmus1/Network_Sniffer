@@ -12,6 +12,7 @@
 - [Testování](#test)
 - [Makefile](#make)
 - [Závěr](#end)
+- [Bibliografie](#src)
 
 ## Úvod <a name="uvod"></a>
 Cílem řešeného projektu bylo vytvořit konzolovou aplikaci, která bude odposlouchávat packety na síti a vypisovat informace o nich na `stdin`.
@@ -49,6 +50,9 @@ Po správném vyfiltrování se informace o daném packet pošlou do statické m
 Všechny tyto metody nakonec pomůžou vrátit výsledný `string` naformátovaný podle zadání a inkrementuje se počet vypsaných packetů.
 ## Testování programu <a name="test"></a>
 Testování nejprve proběhlo aplikováním stejných filtrů jak v programu, tak v aplikaci Wireshark a následnou korelací zachycených packetů. 
+
+![Porovnání packetů](./src/packet.png) *Porovnání výstupu programu a packetu zachyceném ve wiresharku*
+
 Po tomto jednoduchém testu byl vytvořen primitivní skript na testování různých hraničních případů, který byl schopný posílat packety různého typu.
 
 ## Makefile používání <a name="make"></a>
@@ -62,3 +66,14 @@ Po tomto jednoduchém testu byl vytvořen primitivní skript na testování růz
 Tento projekt mě naučil různě typy síťových packetů a jak je zpracovávat, pokud z nich budu potřebovat dostat nějaké konkrétní informace.
 Naučil jsem se pracovat s knihovnou `SharpPcap`.
 Tímto projektem jsem si osvěžil práci s OOP a C#
+
+## Bibliografie <a name="src"></a>
+* sharppcap public repository: https://github.com/dotpcap/sharppcap
+* commandline public respository: https://github.com/commandlineparser/commandline
+* TCPDUMP/LIBPCAP public repository: http://www.tcpdump.org/
+* Library http://packetfactory.openwall.net/projects/libnet/
+* [RFC 792] J. Postel. INTERNET CONTROL MESSAGE PROTOCOL. [online]. September 1981. [cited 2024-04-21]. DOI: 10.17487/RFC0792. Available at: https://datatracker.ietf.org/doc/html/rfc792
+* [RFC 4443] Mukesh Gupta and Alex Conta and M. Gupta, Ed. Internet Control Message Protocol (ICMPv6) [online]. March 2006. [cited 2024-04-21]. DOI: 10.17487/RFC4443 Available at: https://datatracker.ietf.org/doc/html/rfc4443
+* [RFC 826] David C. Plummer. An Ethernet Address Resolution Protocol [online]. November 1982. [cited 2024-04-21]. DOI: 10.17487/RFC0826 Available at: https://datatracker.ietf.org/doc/html/rfc826
+* [RFC 5952] S. Kawamura and M. Kawashima. A Recommendation for IPv6 Address Text Representation [online]. August 2010. [cited 2024-04-21]. DOI: 10.17487/RFC5952. Available at: https://datatracker.ietf.org/doc/html/rfc5952
+* [RFC 3339] G. Klyne and C. Newman. Date and Time on the Internet: Timestamps [online]. July 2002. [cited 2024-04-21]. DOI: 10.17487/RFC3339. Available at: https://datatracker.ietf.org/doc/html/rfc3339
