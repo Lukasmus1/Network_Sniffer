@@ -72,8 +72,8 @@ Tímto projektem jsem si osvěžil práci s OOP a C#
 * commandline public respository: https://github.com/commandlineparser/commandline
 * TCPDUMP/LIBPCAP public repository: http://www.tcpdump.org/
 * Library http://packetfactory.openwall.net/projects/libnet/
-* [RFC 792] J. Postel. INTERNET CONTROL MESSAGE PROTOCOL. [online]. September 1981. [cited 2024-04-21]. DOI: 10.17487/RFC0792. Available at: https://datatracker.ietf.org/doc/html/rfc792
-* [RFC 4443] Mukesh Gupta and Alex Conta and M. Gupta, Ed. Internet Control Message Protocol (ICMPv6) [online]. March 2006. [cited 2024-04-21]. DOI: 10.17487/RFC4443 Available at: https://datatracker.ietf.org/doc/html/rfc4443
-* [RFC 826] David C. Plummer. An Ethernet Address Resolution Protocol [online]. November 1982. [cited 2024-04-21]. DOI: 10.17487/RFC0826 Available at: https://datatracker.ietf.org/doc/html/rfc826
-* [RFC 5952] S. Kawamura and M. Kawashima. A Recommendation for IPv6 Address Text Representation [online]. August 2010. [cited 2024-04-21]. DOI: 10.17487/RFC5952. Available at: https://datatracker.ietf.org/doc/html/rfc5952
-* [RFC 3339] G. Klyne and C. Newman. Date and Time on the Internet: Timestamps [online]. July 2002. [cited 2024-04-21]. DOI: 10.17487/RFC3339. Available at: https://datatracker.ietf.org/doc/html/rfc3339
+* [RFC 792] J. Postel. *INTERNET CONTROL MESSAGE PROTOCOL*. [online]. September 1981. [cited 2024-04-21]. DOI: 10.17487/RFC0792. Available at: https://datatracker.ietf.org/doc/html/rfc792
+* [RFC 4443] Mukesh Gupta and Alex Conta and M. Gupta, Ed. *Internet Control Message Protocol (ICMPv6)* [online]. March 2006. [cited 2024-04-21]. DOI: 10.17487/RFC4443 Available at: https://datatracker.ietf.org/doc/html/rfc4443
+* [RFC 826] David C. Plummer. *An Ethernet Address Resolution Protocol* [online]. November 1982. [cited 2024-04-21]. DOI: 10.17487/RFC0826 Available at: https://datatracker.ietf.org/doc/html/rfc826
+* [RFC 5952] S. Kawamura and M. Kawashima. *A Recommendation for IPv6 Address Text Representation* [online]. August 2010. [cited 2024-04-21]. DOI: 10.17487/RFC5952. Available at: https://datatracker.ietf.org/doc/html/rfc5952
+* [RFC 3339] G. Klyne and C. Newman. *Date and Time on the Internet: Timestamps* [online]. July 2002. [cited 2024-04-21]. DOI: 10.17487/RFC3339. Available at: https://datatracker.ietf.org/doc/html/rfc3339
