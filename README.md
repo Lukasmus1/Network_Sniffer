@@ -38,7 +38,7 @@ Filtrovat je možné následující packety:
 - TCP
 - UDP
 - ICMPv4
-- ICMPv6
+- ICMPv6 (echo request/reply)
 - ARP
 - NDP
 - IGMP

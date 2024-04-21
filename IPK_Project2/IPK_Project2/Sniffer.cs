@@ -126,9 +126,13 @@ public class Sniffer
         }
 
         //ICMP6 filter
-        if (_icmp6 && packet.Extract<IcmpV6Packet>() == null)
+        if (_icmp6)
         {
-            return false;
+            IcmpV6Packet? icmpv6Packet = packet.Extract<IcmpV6Packet>();
+            if (icmpv6Packet == null || (icmpv6Packet.Type != IcmpV6Type.EchoRequest && icmpv6Packet.Type != IcmpV6Type.EchoReply))
+            {
+                return false;
+            }
         }
 
         //ARP filter
