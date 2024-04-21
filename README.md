@@ -15,7 +15,7 @@
 - [Bibliografie](#src)
 
 ## Úvod <a name="uvod"></a>
-Cílem řešeného projektu bylo vytvořit konzolovou aplikaci, která bude odposlouchávat packety na síti a vypisovat informace o nich na `stdin`.
+Cílem řešeného projektu bylo vytvořit konzolovou aplikaci, která bude odposlouchávat packety na síti a vypisovat informace o nich na `stdout`.
 ## Implementace <a name="impl"></a>
 ### 1. Použité nástroje <a name="impl1"></a>
 Na vypracování tohoto projektu jsem použil následující nástroje:
