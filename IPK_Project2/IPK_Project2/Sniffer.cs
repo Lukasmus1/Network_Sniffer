@@ -92,69 +92,65 @@ public class Sniffer
         UdpPacket? udpPacket = packet.Extract<UdpPacket>();
         if (_tcp)
         {
-            if (tcpPacket == null)
+            if (tcpPacket != null)
             {
-                return false;
-            }
-
-            //Port parsing
-            //Port 0 is a wildcard for any port
-            if (_portSource != 0 && tcpPacket.SourcePort != _portSource && _portDest != 0 && tcpPacket.DestinationPort != _portDest)
-            {
-                return false;
+                //Port parsing
+                //Port 0 is a wildcard for any port
+                if (!(_portSource == 0 && tcpPacket.SourcePort != _portSource && _portDest != 0 && tcpPacket.DestinationPort != _portDest))
+                {
+                    return true;
+                }
             }
         }
         else if (_udp)
         {
-            if (udpPacket == null)
+            if (udpPacket != null)
             {
-                return false;
-            }
-
-            //Port parsing
-            //Port 0 is a wildcard for any port
-            if (_portSource != 0 && udpPacket.SourcePort != _portSource && _portDest != 0 && udpPacket.DestinationPort != _portDest)
-            {
-                return false;
+                //Port parsing
+                //Port 0 is a wildcard for any port
+                if (!(_portSource == 0 && udpPacket.SourcePort != _portSource && _portDest != 0 && udpPacket.DestinationPort != _portDest))
+                {
+                    return true;
+                }
             }
         }
         
         //ICMP4 filter
         IcmpV4Packet? icmpv4Packet = packet.Extract<IcmpV4Packet>();
-        if (_icmp4 && icmpv4Packet == null)
+        if (_icmp4 && icmpv4Packet != null)
         {
-            return false;
+            return true;
         }
 
         //ICMP6 filter
         IcmpV6Packet? icmpv6Packet = packet.Extract<IcmpV6Packet>();
         if (_icmp6)
         {
-            if (icmpv6Packet == null || (icmpv6Packet.Type != IcmpV6Type.EchoRequest && icmpv6Packet.Type != IcmpV6Type.EchoReply))
+            if (icmpv6Packet != null || !(icmpv6Packet!.Type != IcmpV6Type.EchoRequest && icmpv6Packet.Type != IcmpV6Type.EchoReply))
             {
-                return false;
+                return true;
             }
         }
 
         //ARP filter
         ArpPacket? arpPacket = packet.Extract<ArpPacket>();
-        if (_arp && arpPacket == null)
+        if (_arp && arpPacket != null)
         {
-            return false;
+            return true;
         }
 
         //NDP filter
         NdpPacket? ndpPacket = packet.Extract<NdpPacket>();
-        if (_ndp && ndpPacket == null)
+        if (_ndp && ndpPacket != null)
         {
-            return false;
+            return true;
         }
 
         //IGMP filter
         IgmpV2Packet? igmpPacket = packet.Extract<IgmpV2Packet>();
-        if (_igmp && igmpPacket == null)
+        if (_igmp && igmpPacket != null)
         {
-            return false;
+            return true;
         }
 
         //MLD filter
@@ -163,33 +159,25 @@ public class Sniffer
         {
             if (_mld)
             {
-                if (packet.Extract<IPPacket>() == null)
+                if (packet.Extract<IPPacket>() != null)
                 {
-                    return false;
-                }
-                packetV6 = packet.Extract<IcmpV6Packet>();
-                if (packetV6 == null)
-                {
-                    return false;
-                }
-
-                switch ((int)packetV6.Type)
-                {
-                    case 130:
-                    case 131:
-                    case 132:
-                    case 143:
-                        return true;
+                    packetV6 = packet.Extract<IcmpV6Packet>();
+                    if (packetV6 != null)
+                    {
+                        switch ((int)packetV6.Type)
+                        {
+                            case 130:
+                            case 131:
+                            case 132:
+                            case 143:
+                                return true;
+                        }
+                    }
                 }
             }
         }
-
-        if (tcpPacket == null && udpPacket == null && icmpv4Packet == null && icmpv6Packet == null && arpPacket == null && ndpPacket == null && igmpPacket == null && packetV6 == null)
-        {
-            return false;
-        }
-
-        return true;
+        
+        return false;
     }
 
     public void EndProgram(object? sender, ConsoleCancelEventArgs e)
