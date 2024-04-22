@@ -34,28 +34,30 @@ Pokud se má vykonat odposlouchávání, tak se zavolá metoda `StartSniffing()`
 Program v tuto chvíli vstoupí do nekonečného `while` cylku, který se ukončí pouze po nastavení podmínky `_run` na false. Tento cyklus má v sobě také uspání na 50 milisekund aby se zbytečně moc nezatěžoval procesor.
 #### OnPacketArrival <a name="impl3-1"></a>
 Pokud program zachytí packet, provede se kontrola zda by vypsání tohoto packetu nepřekročil jejich maximální počet. Následně se provede filtrace packetu pomocí zadaných argumentů. Tato filtrace se provede pokusným extrahováním daného typu a následnou kontrolou, zda tato extrace neobsahuje `null` hodnotu.
-Filtrovat je možné následující packety:
-- TCP
-- UDP
-- ICMPv4
-- ICMPv6 (echo request/reply)
-- ARP
-- NDP
-- IGMP
-- MLD
-- Filtrace podle čísla portu
+Filtrace je možná za pomocí následujících hodnot
+- Typy packetů
+    - TCP (volitelně s číslem portu)
+    - UDP (volitelně s číslem portu)
+    - ICMPv4
+    - ICMPv6 (echo request/reply)
+    - ARP
+    - NDP
+    - IGMP
+    - MLD
+- Možnost stanovit počet vypsaných packetů 
 
 Pokud packet není ani jeden typ z výše uvedených (například lldp), přeskočí se.
 
 #### Formátování výstupu <a name="impl3-2"></a>
 Po správném vyfiltrování se informace o daném packet pošlou do statické metody `FormatOutput()` ve vlastní třídě `OutputFormatter`. V této třídě jsou mimo již dřívě zmíněnou metodu také pomocné metody, které zjistí různé informace o daném packetu. Například čas, MAC adresu, IP adresu...
 Všechny tyto metody nakonec pomůžou vrátit výsledný `string` naformátovaný podle zadání a inkrementuje se počet vypsaných packetů.
+Pokud daný packet nemá nějakou informaci (například port), vypíše se namísto něho `None`.
 ## Testování programu <a name="test"></a>
 Testování nejprve proběhlo aplikováním stejných filtrů jak v programu, tak v aplikaci Wireshark a následnou korelací zachycených packetů. 
 
 ![Porovnání packetů](./src/packet.png) *Porovnání výstupu programu a packetu zachyceném ve wiresharku*
 
-Po tomto jednoduchém testu byl vytvořen primitivní skript na testování různých hraničních případů, který byl schopný posílat packety různého typu.
+Po tomto jednoduchém testu byl vytvořen primitivní skript na testování různých hraničních případů, který byl schopný posílat packety různého typu, jejichž zachycení se poté kontrolovalo v programu.
 
 ## Makefile používání <a name="make"></a>
 - `make` Kompilace a vytvoření spustitelného souboru `ipk-sniffer`

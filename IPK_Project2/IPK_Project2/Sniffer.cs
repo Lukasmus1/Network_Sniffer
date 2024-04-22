@@ -94,21 +94,57 @@ public class Sniffer
         {
             if (tcpPacket != null)
             {
+                bool src = false;
+                bool dest = false;
                 //Port parsing
                 //Port 0 is a wildcard for any port
-                if (!(_portSource == 0 && tcpPacket.SourcePort != _portSource && _portDest != 0 && tcpPacket.DestinationPort != _portDest))
+                //This could be written into one big if statement, but this is more readable
+                if (_portSource == 0 || tcpPacket.SourcePort == _portSource)
+                {
+                    src = true;
+                }
+                if (_portDest == 0 || tcpPacket.DestinationPort == _portDest)
+                {
+                    dest = true;
+                }
+                
+                //If source and destination port are the same, then -p was used
+                if (_portDest == _portSource && (src || dest))
                 {
                     return true;
                 }
+                if (_portDest != _portSource && src && dest)
+                {
+                    return true;
+                }
+               
             }
         }
-        else if (_udp)
+        
+        if (_udp)
         {
             if (udpPacket != null)
             {
+                bool src = false;
+                bool dest = false;
                 //Port parsing
                 //Port 0 is a wildcard for any port
-                if (!(_portSource == 0 && udpPacket.SourcePort != _portSource && _portDest != 0 && udpPacket.DestinationPort != _portDest))
+                //This could be written into one big if statement, but this is more readable
+                if (_portSource == 0 || udpPacket.SourcePort == _portSource)
+                {
+                    src = true;
+                }
+                if (_portDest == 0 || udpPacket.DestinationPort == _portDest)
+                {
+                    dest = true;
+                }
+                
+                //If source and destination port are the same, then -p was used
+                if (_portDest == _portSource && (src || dest))
+                {
+                    return true;
+                }
+                if (_portDest != _portSource && src && dest)
                 {
                     return true;
                 }
@@ -155,39 +191,36 @@ public class Sniffer
 
         //MLD filter
         IcmpV6Packet? packetV6 = null;
-        if (arpPacket == null)
+        if (arpPacket == null && _mld && packet.Extract<IPPacket>() != null)
         {
-            if (_mld)
+            packetV6 = packet.Extract<IcmpV6Packet>();
+            if (packetV6 != null)
             {
-                if (packet.Extract<IPPacket>() != null)
+                switch ((int)packetV6.Type)
                 {
-                    packetV6 = packet.Extract<IcmpV6Packet>();
-                    if (packetV6 != null)
-                    {
-                        switch ((int)packetV6.Type)
-                        {
-                            case 130:
-                            case 131:
-                            case 132:
-                            case 143:
-                                return true;
-                        }
-                    }
+                    case 130:
+                    case 131:
+                    case 132:
+                    case 143:
+                        return true;
                 }
             }
         }
 
+        //If I got a packet, that is not defined in the task, skip it
         if (tcpPacket == null && udpPacket == null && arpPacket == null && icmpv4Packet == null &&
              icmpv6Packet == null && igmpPacket == null && packetV6 == null && ndpPacket == null)
         {
             return false;
         }
         
+        //If no filter was set, print the packet
         if (!_tcp && !_udp && !_arp && !_icmp4 && !_icmp6 && !_igmp && !_mld && !_ndp)
         {
             return true;
         }
         
+        //Shouldn't get here
         return false;
     }
 
