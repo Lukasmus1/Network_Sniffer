@@ -49,6 +49,10 @@ public class Sniffer
         {
             //Sleep to save CPU resources
             Thread.Sleep(1);
+            if (_repeatCounter >= _repeat)
+            {
+                _run = false;
+            }
         }
 
         StopSniffing(device);
